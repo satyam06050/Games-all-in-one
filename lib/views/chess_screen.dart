@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../viewmodels/chess_viewmodel.dart';
 import '../utils/app_res.dart';
+import '../controllers/theme_controller.dart';
 
 class ChessScreen extends StatelessWidget {
   const ChessScreen({super.key});
@@ -9,14 +10,15 @@ class ChessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Get.put(ChessViewModel());
+    final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      backgroundColor: AppRes.backgroundColor,
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.gradientColors[0],
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+              colors: themeController.gradientColors,
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
@@ -41,9 +43,9 @@ class ChessScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: AppRes.cardColor,
+              color: themeController.cardColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppRes.primaryColor.withValues(alpha: 0.3)),
+              border: Border.all(color: themeController.accentColor.withValues(alpha: 0.3)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -58,7 +60,7 @@ class ChessScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: viewModel.currentPlayer.value == 'white'
-                              ? AppRes.primaryColor.withValues(alpha: 0.3)
+                              ? themeController.accentColor.withValues(alpha: 0.3)
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -66,7 +68,7 @@ class ChessScreen extends StatelessWidget {
                           viewModel.currentPlayer.value == 'white' ? 'Your Turn' : 'Waiting',
                           style: TextStyle(
                             fontSize: 14,
-                            color: viewModel.currentPlayer.value == 'white' ? AppRes.primaryColor : Colors.white54,
+                            color: viewModel.currentPlayer.value == 'white' ? themeController.accentColor : Colors.white54,
                           ),
                         ),
                       ),
@@ -88,7 +90,7 @@ class ChessScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: viewModel.currentPlayer.value == 'black'
-                              ? AppRes.primaryColor.withValues(alpha: 0.3)
+                              ? themeController.accentColor.withValues(alpha: 0.3)
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -96,7 +98,7 @@ class ChessScreen extends StatelessWidget {
                           viewModel.currentPlayer.value == 'black' ? 'Your Turn' : 'Waiting',
                           style: TextStyle(
                             fontSize: 14,
-                            color: viewModel.currentPlayer.value == 'black' ? AppRes.primaryColor : Colors.white54,
+                            color: viewModel.currentPlayer.value == 'black' ? themeController.accentColor : Colors.white54,
                           ),
                         ),
                       ),
@@ -118,7 +120,7 @@ class ChessScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Obx(() {
-                    final boardData = viewModel.board.value;
+                    final boardData = viewModel.board;
                     final selected = viewModel.selectedPiece.value;
                     
                     return GridView.builder(
@@ -143,7 +145,7 @@ class ChessScreen extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? AppRes.primaryColor.withValues(alpha: 0.5)
+                                  ? themeController.accentColor.withValues(alpha: 0.5)
                                   : isLight
                                       ? const Color(0xFFEEEED2)
                                       : const Color(0xFF769656),
@@ -168,7 +170,7 @@ class ChessScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppRes.primaryColor,
+                backgroundColor: themeController.buttonColor,
                 minimumSize: const Size(double.infinity, 50),
               ),
               child: const Text('Back to Games'),
@@ -176,19 +178,20 @@ class ChessScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 
   void _showEmojiPicker(BuildContext context, ChessViewModel viewModel, String player) {
+    final themeController = Get.find<ThemeController>();
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppRes.cardColor,
+      backgroundColor: themeController.cardColor,
       builder: (context) => Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Choose Emoji', style: TextStyle(fontSize: 18, color: AppRes.primaryColor, fontWeight: FontWeight.bold)),
+            Text('Choose Emoji', style: TextStyle(fontSize: 18, color: themeController.accentColor, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Wrap(
               spacing: 12,

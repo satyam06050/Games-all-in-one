@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../viewmodels/webview_viewmodel.dart';
+import '../viewmodels/dashboard_viewmodel.dart';
 import '../models/game_api_model.dart';
 import '../widgets/shimmer_widget.dart';
 import 'screenshot_capture_screen.dart';
 import '../viewmodels/screenshot_viewmodel.dart';
+import '../controllers/theme_controller.dart';
 
 class WebViewScreen extends StatefulWidget {
   final GameApiModel game;
@@ -37,6 +39,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
         final currentTime = prefs.getInt(keyTime) ?? 0;
         await prefs.setInt(keyTime, currentTime + playTime);
         await prefs.setInt(keyLast, DateTime.now().millisecondsSinceEpoch);
+        
+        final dashboardViewModel = Get.find<DashboardViewModel>();
+        dashboardViewModel.addPlaytime(playTime);
+        dashboardViewModel.incrementGamesPlayed();
       }
     }
     Get.delete<WebViewViewModel>(tag: widget.game.url);
@@ -47,14 +53,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Widget build(BuildContext context) {
     final viewModel = Get.put(WebViewViewModel(widget.game), tag: widget.game.url);
     final screenshotViewModel = Get.put(ScreenshotViewModel());
+    final themeController = Get.find<ThemeController>();
 
-    return ScreenshotCaptureWrapper(
+    return Obx(() => ScreenshotCaptureWrapper(
       child: Scaffold(
+      backgroundColor: themeController.gradientColors[0],
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+              colors: themeController.gradientColors,
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
@@ -89,7 +97,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           WebViewWidget(controller: viewModel.webController),
           if (viewModel.isLoading.value)
             Container(
-              color: Colors.white,
+              color: themeController.cardColor,
               child: Column(
                 children: [
                   ShimmerWidget(
@@ -125,6 +133,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ],
       )),
     ),
-    );
+    ));
   }
 }

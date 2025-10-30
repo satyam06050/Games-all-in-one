@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../viewmodels/category_viewmodel.dart';
 import '../viewmodels/home_viewmodel.dart';
 import 'category_games_screen.dart';
+import '../controllers/theme_controller.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
@@ -12,14 +13,15 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = Get.put(CategoryViewModel());
     final searchController = TextEditingController();
+    final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.gradientColors[0],
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+              colors: themeController.gradientColors,
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
@@ -43,10 +45,11 @@ class CategoriesScreen extends StatelessWidget {
           Expanded(child: _buildCategoryGrid(viewModel, context)),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildSearchBar(TextEditingController controller, CategoryViewModel viewModel) {
+    final themeController = Get.find<ThemeController>();
     return Container(
       padding: const EdgeInsets.all(16),
       child: TextField(
@@ -56,9 +59,9 @@ class CategoriesScreen extends StatelessWidget {
         decoration: InputDecoration(
           hintText: 'Search games or categories...',
           hintStyle: const TextStyle(color: Colors.white54),
-          prefixIcon: const Icon(Icons.search, color: Color(0xFFFC8019)),
+          prefixIcon: Icon(Icons.search, color: themeController.accentColor),
           filled: true,
-          fillColor: const Color(0xFF2C2C2C),
+          fillColor: themeController.cardColor,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide.none,
@@ -94,6 +97,7 @@ class CategoriesScreen extends StatelessWidget {
   }
 
   Widget _buildSearchResults(CategoryViewModel viewModel, BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return Obx(() {
       final games = viewModel.filteredGames;
       
@@ -118,7 +122,7 @@ class CategoriesScreen extends StatelessWidget {
           return Container(
             margin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF2C2C2C),
+              color: themeController.cardColor,
               borderRadius: BorderRadius.circular(16),
             ),
             child: ListTile(
@@ -127,7 +131,7 @@ class CategoriesScreen extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFC8019).withValues(alpha: 0.2),
+                  color: themeController.accentColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
@@ -144,7 +148,7 @@ class CategoriesScreen extends StatelessWidget {
                 ),
               ),
               title: Text(game.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-              trailing: const Icon(Icons.arrow_forward_ios, color: Color(0xFFFC8019), size: 16),
+              trailing: Icon(Icons.arrow_forward_ios, color: themeController.accentColor, size: 16),
               onTap: () {
                 final homeViewModel = Get.find<HomeViewModel>();
                 homeViewModel.onGameTap(game, context);
@@ -157,6 +161,7 @@ class CategoriesScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryCard(dynamic category, CategoryViewModel viewModel, BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return GestureDetector(
       onTap: () {
         viewModel.selectCategory(category.id);
@@ -167,15 +172,15 @@ class CategoriesScreen extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+          gradient: LinearGradient(
+            colors: [themeController.accentColor, themeController.buttonColor],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFFC8019).withValues(alpha: 0.3),
+              color: themeController.accentColor.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -213,13 +218,14 @@ class CategoriesScreen extends StatelessWidget {
   }
 
   void _showFilterSheet(BuildContext context, CategoryViewModel viewModel) {
+    final themeController = Get.find<ThemeController>();
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Color(0xFF2C2C2C),
+        decoration: BoxDecoration(
+          color: themeController.cardColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -237,7 +243,7 @@ class CategoriesScreen extends StatelessWidget {
                       label: Text(sort),
                       selected: viewModel.sortBy.value == sort,
                       onSelected: (selected) => viewModel.setSortBy(sort),
-                      selectedColor: const Color(0xFFFC8019),
+                      selectedColor: themeController.accentColor,
                       labelStyle: TextStyle(color: viewModel.sortBy.value == sort ? Colors.white : Colors.white70),
                       backgroundColor: const Color(0xFF1E1E1E),
                     );
@@ -248,7 +254,7 @@ class CategoriesScreen extends StatelessWidget {
                   title: const Text('Offline Only', style: TextStyle(color: Colors.white)),
                   value: viewModel.offlineOnly.value,
                   onChanged: (value) => viewModel.toggleOfflineOnly(),
-                  activeTrackColor: const Color(0xFFFC8019),
+                  activeTrackColor: themeController.accentColor,
                   tileColor: const Color(0xFF1E1E1E),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 )),
@@ -277,7 +283,7 @@ class CategoriesScreen extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFC8019),
+                      backgroundColor: themeController.buttonColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../viewmodels/dashboard_viewmodel.dart';
+import '../controllers/theme_controller.dart';
 import 'rating_screen.dart';
 import 'rewards_screen.dart';
 import 'categories_screen.dart';
@@ -13,9 +14,10 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Get.put(DashboardViewModel());
+    final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.gradientColors[0],
       body: CustomScrollView(
         slivers: [
           _buildAppBar(context, viewModel),
@@ -33,18 +35,19 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildAppBar(BuildContext context, DashboardViewModel viewModel) {
+    final themeController = Get.find<ThemeController>();
     return SliverAppBar(
       expandedHeight: 120,
       floating: false,
       pinned: true,
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFFC8019), Color(0xFFFF9F50)],
+            colors: themeController.gradientColors,
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
@@ -109,19 +112,20 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildUserSummaryCard(DashboardViewModel viewModel) {
+    final themeController = Get.find<ThemeController>();
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFC8019), Color(0xFFFF9F50)],
+        gradient: LinearGradient(
+          colors: [themeController.accentColor, themeController.buttonColor],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFFC8019).withValues(alpha: 0.3),
+            color: themeController.accentColor.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -191,6 +195,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildQuickActions(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     final actions = [
       {'icon': FontAwesomeIcons.gamepad, 'label': 'Play Game', 'route': 'home'},
       {'icon': FontAwesomeIcons.star, 'label': 'Rate Games', 'route': 'rating'},
@@ -234,15 +239,15 @@ class DashboardScreen extends StatelessWidget {
               onTap: () => _navigateToRoute(context, action['route'] as String),
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFC8019), Color(0xFFFF9F50)],
+                  gradient: LinearGradient(
+                    colors: [themeController.accentColor, themeController.buttonColor],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFC8019).withValues(alpha: 0.3),
+                      color: themeController.accentColor.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -276,6 +281,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildModulesSection(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     final modules = [
       {
         'icon': FontAwesomeIcons.gamepad,
@@ -321,10 +327,10 @@ class DashboardScreen extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF2C2C2C),
+                color: themeController.cardColor,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: const Color(0xFFFC8019).withValues(alpha: 0.3),
+                  color: themeController.accentColor.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -333,13 +339,13 @@ class DashboardScreen extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFC8019).withValues(alpha: 0.2),
+                      color: themeController.accentColor.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
                       child: FaIcon(
                         module['icon'] as IconData,
-                        color: const Color(0xFFFC8019),
+                        color: themeController.accentColor,
                         size: 24,
                       ),
                     ),
@@ -368,9 +374,9 @@ class DashboardScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.arrow_forward_ios,
-                    color: Color(0xFFFC8019),
+                    color: themeController.accentColor,
                     size: 16,
                   ),
                 ],
@@ -383,6 +389,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildRecentGamesSection(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return LayoutBuilder(
       builder: (context, constraints) {
         // Calculate adaptive sizes based on screen width
@@ -415,9 +422,9 @@ class DashboardScreen extends StatelessWidget {
                         builder: (context) => const RecentGamesScreen(),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'View All',
-                      style: TextStyle(color: Color(0xFFFC8019)),
+                      style: TextStyle(color: themeController.accentColor),
                     ),
                   ),
                 ],
@@ -436,16 +443,16 @@ class DashboardScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(right: 10),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2C2C2C),
+                      color: themeController.cardColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const FaIcon(
+                        FaIcon(
                           FontAwesomeIcons.gamepad,
-                          color: Color(0xFFFC8019),
+                          color: themeController.accentColor,
                           size: 20,
                         ),
                         const Text(
@@ -466,7 +473,7 @@ class DashboardScreen extends StatelessWidget {
                               i < 4
                                   ? FontAwesomeIcons.solidStar
                                   : FontAwesomeIcons.star,
-                              color: const Color(0xFFFC8019),
+                              color: themeController.accentColor,
                               size: 7,
                             ),
                           ),
@@ -492,7 +499,7 @@ class DashboardScreen extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFC8019),
+                            backgroundColor: themeController.buttonColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
                             ),
@@ -520,11 +527,12 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildStatsFooter(DashboardViewModel viewModel) {
+    final themeController = Get.find<ThemeController>();
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
+        color: themeController.cardColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Obx(
@@ -535,21 +543,22 @@ class DashboardScreen extends StatelessWidget {
               FontAwesomeIcons.chartColumn,
               'Games\nPlayed',
               '${viewModel.gamesPlayed.value}',
+              themeController,
             ),
-            _buildFooterStat(FontAwesomeIcons.trophy, 'Total\nXP', '${viewModel.xp.value}'),
-            _buildFooterStat(FontAwesomeIcons.clock, 'Time\nPlayed', viewModel.playtimeFormatted),
-            _buildFooterStat(FontAwesomeIcons.solidHeart, 'Favorites', '${viewModel.favorites.value}'),
+            _buildFooterStat(FontAwesomeIcons.trophy, 'Total\nXP', '${viewModel.xp.value}', themeController),
+            _buildFooterStat(FontAwesomeIcons.clock, 'Time\nPlayed', viewModel.playtimeFormatted, themeController),
+            _buildFooterStat(FontAwesomeIcons.solidHeart, 'Favorites', '${viewModel.favorites.value}', themeController),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFooterStat(IconData icon, String label, String value) {
+  Widget _buildFooterStat(IconData icon, String label, String value, ThemeController themeController) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        FaIcon(icon, color: const Color(0xFFFC8019), size: 20),
+        FaIcon(icon, color: themeController.accentColor, size: 20),
         const SizedBox(height: 4),
         Text(
           label,
@@ -559,10 +568,10 @@ class DashboardScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: Color(0xFFFC8019),
+            color: themeController.accentColor,
           ),
         ),
       ],

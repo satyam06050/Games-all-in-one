@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../utils/app_res.dart';
+import '../controllers/theme_controller.dart';
 import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -78,13 +81,14 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final themeController = Get.find<ThemeController>();
+    return Obx(() => Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF121212), Color(0xFF1F1F1F)],
+            colors: themeController.gradientColors,
           ),
         ),
         child: Center(
@@ -106,20 +110,29 @@ class _SplashScreenState extends State<SplashScreen>
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(
-                                    0xFFFC8019,
-                                  ).withValues(alpha: 0.3),
+                                  color: themeController.accentColor.withValues(alpha: 0.3),
                                   blurRadius: 20,
                                   spreadRadius: 5,
                                 ),
                               ],
                             ),
-                            child: Text(
-                              '🎮 GAMES ALL-IN-ONE',
-                              style: AppRes.headingM.copyWith(
-                                color: const Color(0xFFFC8019),
-                                letterSpacing: 2,
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.gamepad,
+                                  color: themeController.accentColor,
+                                  size: 32,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'GAMES ALL-IN-ONE',
+                                  style: AppRes.headingM.copyWith(
+                                    color: themeController.accentColor,
+                                    letterSpacing: 2,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -141,7 +154,11 @@ class _SplashScreenState extends State<SplashScreen>
                 builder: (context, child) {
                   return Transform.rotate(
                     angle: _ballRotation.value * 3.14159,
-                    child: const Text('🎮', style: TextStyle(fontSize: 40)),
+                    child: FaIcon(
+                      FontAwesomeIcons.gamepad,
+                      color: themeController.accentColor,
+                      size: 40,
+                    ),
                   );
                 },
               ),
@@ -149,6 +166,6 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         ),
       ),
-    );
+    ));
   }
 }

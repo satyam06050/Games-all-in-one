@@ -14,7 +14,7 @@ import '../views/rewards_screen.dart';
 import '../views/rating_screen.dart';
 import '../views/categories_screen.dart';
 import '../views/dashboard_screen.dart';
-import '../views/quiz_screen.dart';
+import '../views/quiz_level_selection_screen.dart';
 
 class HomeViewModel extends GetxController {
   final isLoading = false.obs;
@@ -132,7 +132,7 @@ class HomeViewModel extends GetxController {
       case 'Quiz':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const QuizScreen()),
+          MaterialPageRoute(builder: (context) => const QuizLevelSelectionScreen()),
         );
         break;
       default:

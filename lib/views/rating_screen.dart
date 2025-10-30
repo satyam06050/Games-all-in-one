@@ -5,6 +5,7 @@ import '../viewmodels/rating_viewmodel.dart';
 import '../viewmodels/home_viewmodel.dart';
 import '../models/game_api_model.dart';
 import '../models/game_rating_model.dart';
+import '../controllers/theme_controller.dart';
 
 class RatingScreen extends StatelessWidget {
   const RatingScreen({super.key});
@@ -13,16 +14,17 @@ class RatingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = Get.put(RatingViewModel());
     final homeViewModel = Get.find<HomeViewModel>();
+    final themeController = Get.find<ThemeController>();
 
-    return DefaultTabController(
+    return Obx(() => DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: themeController.gradientColors[0],
         appBar: AppBar(
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+                colors: themeController.gradientColors,
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -56,7 +58,7 @@ class RatingScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildAllGamesTab(HomeViewModel homeViewModel, RatingViewModel viewModel, BuildContext context) {
@@ -80,13 +82,14 @@ class RatingScreen extends StatelessWidget {
   }
 
   Widget _buildGameCard(GameApiModel game, GameRating? rating, RatingViewModel viewModel, BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
+        color: themeController.cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFFC8019).withValues(alpha: 0.2),
+            color: themeController.accentColor.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -97,8 +100,8 @@ class RatingScreen extends StatelessWidget {
           Container(
             height: 80,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+              gradient: LinearGradient(
+                colors: [themeController.accentColor, themeController.buttonColor],
               ),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             ),
@@ -136,7 +139,7 @@ class RatingScreen extends StatelessWidget {
                       children: [
                         ...List.generate(5, (i) => Icon(
                               i < rating.stars ? Icons.star : Icons.star_border,
-                              color: const Color(0xFFFC8019),
+                              color: themeController.accentColor,
                               size: 16,
                             )),
                       ],
@@ -148,7 +151,7 @@ class RatingScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () => _showRatingBottomSheet(context, game, viewModel, rating),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFC8019),
+                        backgroundColor: themeController.buttonColor,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         padding: const EdgeInsets.symmetric(vertical: 8),
                       ),
@@ -168,6 +171,7 @@ class RatingScreen extends StatelessWidget {
   }
 
   Widget _buildMyRatingsTab(RatingViewModel viewModel, BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return Obx(() => viewModel.ratings.isEmpty
         ? const Center(
             child: Column(
@@ -190,7 +194,7 @@ class RatingScreen extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2C2C2C),
+                  color: themeController.cardColor,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -200,7 +204,7 @@ class RatingScreen extends StatelessWidget {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFC8019).withValues(alpha: 0.2),
+                          color: themeController.accentColor.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(child: Text(rating.emoji, style: const TextStyle(fontSize: 28))),
@@ -215,7 +219,7 @@ class RatingScreen extends StatelessWidget {
                           Row(
                             children: List.generate(5, (i) => Icon(
                                   i < rating.stars ? Icons.star : Icons.star_border,
-                                  color: const Color(0xFFFC8019),
+                                  color: themeController.accentColor,
                                   size: 18,
                                 )),
                           ),
@@ -234,6 +238,7 @@ class RatingScreen extends StatelessWidget {
   }
 
   void _showRatingBottomSheet(BuildContext context, GameApiModel game, RatingViewModel viewModel, GameRating? existingRating) {
+    final themeController = Get.find<ThemeController>();
     if (existingRating != null) {
       viewModel.setStars(existingRating.stars);
       viewModel.setEmoji(existingRating.emoji);
@@ -247,8 +252,8 @@ class RatingScreen extends StatelessWidget {
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Container(
           padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: Color(0xFF2C2C2C),
+          decoration: BoxDecoration(
+            color: themeController.cardColor,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SingleChildScrollView(
@@ -261,7 +266,7 @@ class RatingScreen extends StatelessWidget {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFC8019).withValues(alpha: 0.2),
+                    color: themeController.accentColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ClipRRect(
@@ -293,7 +298,7 @@ class RatingScreen extends StatelessWidget {
                       onTap: () => viewModel.setStars((i + 1).toDouble()),
                       child: Icon(
                         i < stars ? Icons.star : Icons.star_border,
-                        color: const Color(0xFFFC8019),
+                        color: themeController.accentColor,
                         size: 40,
                       ),
                     );
@@ -315,11 +320,11 @@ class RatingScreen extends StatelessWidget {
                         height: 50,
                         decoration: BoxDecoration(
                           color: selectedEmoji == emoji
-                              ? const Color(0xFFFC8019).withValues(alpha: 0.3)
+                              ? themeController.accentColor.withValues(alpha: 0.3)
                               : const Color(0xFF1E1E1E),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: selectedEmoji == emoji ? const Color(0xFFFC8019) : Colors.transparent,
+                            color: selectedEmoji == emoji ? themeController.accentColor : Colors.transparent,
                             width: 2,
                           ),
                         ),
@@ -365,7 +370,7 @@ class RatingScreen extends StatelessWidget {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFC8019),
+                      backgroundColor: themeController.buttonColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
@@ -383,14 +388,15 @@ class RatingScreen extends StatelessWidget {
   }
 
   void _showInfoDialog(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF2C2C2C),
+        backgroundColor: themeController.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.info_outline, color: Color(0xFFFC8019)),
+            Icon(Icons.info_outline, color: themeController.accentColor),
             SizedBox(width: 8),
             Text('Local Ratings', style: TextStyle(color: Colors.white)),
           ],
@@ -402,7 +408,7 @@ class RatingScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Got it', style: TextStyle(color: Color(0xFFFC8019))),
+            child: Text('Got it', style: TextStyle(color: themeController.accentColor)),
           ),
         ],
       ),

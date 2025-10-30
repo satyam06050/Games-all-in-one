@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../viewmodels/history_viewmodel.dart';
 import '../utils/app_res.dart';
 import '../widgets/shimmer_widget.dart';
+import '../controllers/theme_controller.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -10,14 +11,15 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Get.put(HistoryViewModel());
+    final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      backgroundColor: AppRes.backgroundColor,
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.gradientColors[0],
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+              colors: themeController.gradientColors,
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
@@ -46,7 +48,7 @@ class HistoryScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.history, size: 64, color: AppRes.primaryColor.withValues(alpha: 0.5)),
+                Icon(Icons.history, size: 64, color: themeController.accentColor.withValues(alpha: 0.5)),
                 const SizedBox(height: 16),
                 const Text('No games in history', style: TextStyle(color: Colors.white70, fontSize: 18)),
                 const SizedBox(height: 8),
@@ -64,9 +66,9 @@ class HistoryScreen extends StatelessWidget {
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: AppRes.cardColor,
+                color: themeController.cardColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppRes.primaryColor.withValues(alpha: 0.2)),
+                border: Border.all(color: themeController.accentColor.withValues(alpha: 0.2)),
               ),
               child: ListTile(
                 contentPadding: const EdgeInsets.all(12),
@@ -82,7 +84,7 @@ class HistoryScreen extends StatelessWidget {
                           child: Image.network(
                             game.icon,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Icon(Icons.games, color: AppRes.primaryColor),
+                            errorBuilder: (_, __, ___) => Icon(Icons.games, color: themeController.accentColor),
                           ),
                         )
                       : Center(child: Text(game.icon.isNotEmpty ? game.icon : '🎮', style: const TextStyle(fontSize: 24))),
@@ -98,13 +100,13 @@ class HistoryScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 12, color: Colors.white54),
                   ),
                 ),
-                trailing: Icon(Icons.arrow_forward_ios, color: AppRes.primaryColor, size: 16),
+                trailing: Icon(Icons.arrow_forward_ios, color: themeController.accentColor, size: 16),
                 onTap: () => viewModel.onGameTap(game, context),
               ),
             );
           },
         );
       }),
-    );
+    ));
   }
 }

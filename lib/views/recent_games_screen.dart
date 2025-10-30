@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../viewmodels/history_viewmodel.dart';
-import '../utils/app_res.dart';
 import '../widgets/shimmer_widget.dart';
+import '../controllers/theme_controller.dart';
 
 class RecentGamesScreen extends StatefulWidget {
   const RecentGamesScreen({super.key});
@@ -85,17 +85,15 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
   @override
   Widget build(BuildContext context) {
     final viewModel = _viewModel;
+    final themeController = Get.find<ThemeController>();
 
     return Obx(() {
       return Scaffold(
-        backgroundColor: AppRes.backgroundColor,
+        backgroundColor: themeController.gradientColors[0],
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                const Color(0xFFFC8019).withValues(alpha: 0.05),
-                AppRes.backgroundColor,
-              ],
+              colors: themeController.gradientColors,
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -114,6 +112,7 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
   }
 
   Widget _buildAppBar(BuildContext context, HistoryViewModel viewModel) {
+    final themeController = Get.find<ThemeController>();
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -133,7 +132,7 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
           const Spacer(),
           IconButton(
             onPressed: viewModel.loadHistory,
-            icon: const Icon(Icons.refresh, color: Color(0xFFFC8019), size: 24),
+            icon: Icon(Icons.refresh, color: themeController.accentColor, size: 24),
           ),
         ],
       ),
@@ -217,6 +216,7 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
   }
 
   Widget _buildUsageGraph() {
+    final themeController = Get.find<ThemeController>();
     final totalTime = _playTimes.values.fold(0, (sum, time) => sum + time);
     final hourlyUsage = <int, int>{};
 
@@ -238,7 +238,7 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
+        color: themeController.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -277,14 +277,14 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
                           'Total Time',
                           style: TextStyle(fontSize: 12, color: Colors.white70),
                         ),
-                        Text(
+                        Obx(() => Text(
                           '${totalTime}m',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFFC8019),
+                            color: themeController.accentColor,
                           ),
-                        ),
+                        )),
                       ],
                     ),
                   ),
@@ -297,14 +297,14 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
                           'Peak Hour',
                           style: TextStyle(fontSize: 12, color: Colors.white70),
                         ),
-                        Text(
+                        Obx(() => Text(
                           '${peakHour % 12 == 0 ? 12 : peakHour % 12}${peakHour >= 12 ? 'PM' : 'AM'}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFFC8019),
+                            color: themeController.accentColor,
                           ),
-                        ),
+                        )),
                       ],
                     ),
                   ),
@@ -330,10 +330,10 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
                               duration: const Duration(milliseconds: 300),
                               height: height,
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
+                                gradient: LinearGradient(
                                   colors: [
-                                    Color(0xFFFC8019),
-                                    Color(0xFFFF9F52),
+                                    themeController.accentColor,
+                                    themeController.buttonColor,
                                   ],
                                   begin: Alignment.bottomCenter,
                                   end: Alignment.topCenter,
@@ -370,6 +370,7 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
     HistoryViewModel viewModel,
     BuildContext context,
   ) {
+    final themeController = Get.find<ThemeController>();
     final playTime = _playTimes[game.id] ?? 0;
     final lastPlayedTime = _lastPlayed[game.id];
     final timeAgo = lastPlayedTime != null
@@ -379,7 +380,7 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
+        color: themeController.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -399,9 +400,9 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
               Container(
                 width: 4,
                 height: 90,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+                    colors: [themeController.accentColor, themeController.buttonColor],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
@@ -469,10 +470,10 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
                     const SizedBox(height: 2),
                     Text(
                       'Total: ${playTime}m',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFFFC8019),
+                        color: themeController.accentColor,
                       ),
                     ),
                   ],
@@ -485,8 +486,8 @@ class _RecentGamesScreenState extends State<RecentGamesScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+                  gradient: LinearGradient(
+                    colors: [themeController.accentColor, themeController.buttonColor],
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),

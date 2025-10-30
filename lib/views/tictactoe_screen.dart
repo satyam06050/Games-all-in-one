@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../viewmodels/tictactoe_viewmodel.dart';
 import '../utils/app_res.dart';
+import '../controllers/theme_controller.dart';
 
 class TicTacToeScreen extends StatelessWidget {
   const TicTacToeScreen({super.key});
@@ -9,14 +10,15 @@ class TicTacToeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Get.put(TicTacToeViewModel());
+    final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      backgroundColor: AppRes.backgroundColor,
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.gradientColors[0],
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+              colors: themeController.gradientColors,
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
@@ -61,9 +63,9 @@ class TicTacToeScreen extends StatelessWidget {
                             onTap: () => viewModel.makeMove(index),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: AppRes.cardColor,
+                                color: themeController.cardColor,
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppRes.primaryColor.withValues(alpha: 0.3)),
+                                border: Border.all(color: themeController.accentColor.withValues(alpha: 0.3)),
                               ),
                               child: Center(
                                 child: Text(
@@ -71,7 +73,7 @@ class TicTacToeScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 48,
                                     fontWeight: FontWeight.bold,
-                                    color: viewModel.board[index] == 'X' ? AppRes.primaryColor : Colors.blue,
+                                    color: viewModel.board[index] == 'X' ? themeController.accentColor : Colors.blue,
                                   ),
                                 ),
                               ),
@@ -98,13 +100,13 @@ class TicTacToeScreen extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             onPressed: () => viewModel.resetGame(),
-                            style: ElevatedButton.styleFrom(backgroundColor: AppRes.primaryColor),
+                            style: ElevatedButton.styleFrom(backgroundColor: themeController.buttonColor),
                             child: const Text('Play Again'),
                           ),
                           const SizedBox(width: 16),
                           OutlinedButton(
                             onPressed: () => Navigator.pop(context),
-                            style: OutlinedButton.styleFrom(side: BorderSide(color: AppRes.primaryColor)),
+                            style: OutlinedButton.styleFrom(side: BorderSide(color: themeController.accentColor)),
                             child: const Text('Back to Games'),
                           ),
                         ],
@@ -124,19 +126,20 @@ class TicTacToeScreen extends StatelessWidget {
             ),
         ],
       )),
-    );
+    ));
   }
 
   Widget _buildPlayerCard(String name, int score, bool isActive, String emoji, VoidCallback onEmojiTap) {
+    final themeController = Get.find<ThemeController>();
     return GestureDetector(
       onTap: onEmojiTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isActive ? AppRes.primaryColor.withValues(alpha: 0.2) : AppRes.cardColor,
+          color: isActive ? themeController.accentColor.withValues(alpha: 0.2) : themeController.cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isActive ? AppRes.primaryColor : Colors.transparent,
+            color: isActive ? themeController.accentColor : Colors.transparent,
             width: 2,
           ),
         ),
@@ -144,7 +147,7 @@ class TicTacToeScreen extends StatelessWidget {
           children: [
             Text(name, style: const TextStyle(fontSize: 16, color: Colors.white)),
             const SizedBox(height: 8),
-            Text('Score: $score', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppRes.primaryColor)),
+            Text('Score: $score', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: themeController.accentColor)),
             if (emoji.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(emoji, style: const TextStyle(fontSize: 32)),
@@ -156,15 +159,16 @@ class TicTacToeScreen extends StatelessWidget {
   }
 
   void _showEmojiPicker(BuildContext context, TicTacToeViewModel viewModel, String player) {
+    final themeController = Get.find<ThemeController>();
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppRes.cardColor,
+      backgroundColor: themeController.cardColor,
       builder: (context) => Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Choose Emoji', style: TextStyle(fontSize: 18, color: AppRes.primaryColor, fontWeight: FontWeight.bold)),
+            Text('Choose Emoji', style: TextStyle(fontSize: 18, color: themeController.accentColor, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Wrap(
               spacing: 12,

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.games_all_in_one"
+    namespace = "com.appsly.games_all_in_one"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "29.0.13599879"
 
@@ -20,8 +20,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.games_all_in_one"
+        applicationId = "com.appsly.games_all_in_one"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -32,11 +31,21 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // TODO: Create keystore and configure:
+            // signingConfig = signingConfigs.getByName("release")
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    // TODO: Uncomment and configure for production release:
+    // signingConfigs {
+    //     release {
+    //         storeFile = file("../keystore.jks")
+    //         storePassword = System.getenv("KEYSTORE_PASSWORD")
+    //         keyAlias = System.getenv("KEY_ALIAS")
+    //         keyPassword = System.getenv("KEY_PASSWORD")
+    //     }
+    // }
 }
 
 flutter {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:games_all_in_one/utils/app_res.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

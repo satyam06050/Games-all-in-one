@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../viewmodels/favorites_viewmodel.dart';
-import '../utils/app_res.dart';
+import '../controllers/theme_controller.dart';
 
 class FavouritesScreen extends StatelessWidget {
   const FavouritesScreen({super.key});
@@ -10,16 +10,14 @@ class FavouritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Get.put(FavoritesViewModel());
+    final themeController = Get.find<ThemeController>();
 
     return Obx(() => Scaffold(
-      backgroundColor: AppRes.backgroundColor,
+      backgroundColor: themeController.gradientColors[0],
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              const Color(0xFFFC8019).withValues(alpha: 0.1),
-              AppRes.backgroundColor,
-            ],
+            colors: themeController.gradientColors,
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -38,19 +36,20 @@ class FavouritesScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => viewModel.showAddGamesDialog(context),
-        backgroundColor: const Color(0xFFFC8019),
+        backgroundColor: themeController.buttonColor,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     ));
   }
 
   Widget _buildAppBar(BuildContext context, FavoritesViewModel viewModel) {
+    final themeController = Get.find<ThemeController>();
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFFFC8019).withValues(alpha: 0.2),
+            themeController.accentColor.withValues(alpha: 0.2),
             Colors.transparent,
           ],
           begin: Alignment.topCenter,
@@ -81,7 +80,7 @@ class FavouritesScreen extends StatelessWidget {
             onPressed: viewModel.toggleEditMode,
             icon: Icon(
               viewModel.isEditMode.value ? Icons.done : Icons.edit,
-              color: const Color(0xFFFC8019),
+              color: themeController.accentColor,
               size: 24,
             ),
           ),
@@ -91,6 +90,7 @@ class FavouritesScreen extends StatelessWidget {
   }
 
   Widget _buildQuickAccessSection(FavoritesViewModel viewModel, BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
@@ -134,15 +134,15 @@ class FavouritesScreen extends StatelessWidget {
                               shape: BoxShape.circle,
                               gradient: LinearGradient(
                                 colors: [
-                                  const Color(0xFFFC8019),
-                                  const Color(0xFFFF9F52),
+                                  themeController.accentColor,
+                                  themeController.buttonColor,
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFFFC8019).withValues(alpha: 0.3),
+                                  color: themeController.accentColor.withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -178,6 +178,7 @@ class FavouritesScreen extends StatelessWidget {
   }
 
   Widget _buildFavoritesList(FavoritesViewModel viewModel, BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     if (viewModel.favoriteGames.isEmpty) {
       return Center(
         child: Column(
@@ -309,9 +310,9 @@ class FavouritesScreen extends StatelessWidget {
                     else
                       IconButton(
                         onPressed: () => viewModel.removeFavorite(game),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.favorite,
-                          color: Color(0xFFFC8019),
+                          color: themeController.accentColor,
                           size: 20,
                         ),
                       ),

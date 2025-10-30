@@ -59,7 +59,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.palette, color: Colors.white, size: 24),
@@ -95,12 +95,12 @@ class _ThemesScreenState extends State<ThemesScreen> {
                 borderRadius: BorderRadius.circular(20),
                 border: isSelected
                     ? Border.all(color: theme['accent'] as Color, width: 3)
-                    : Border.all(color: Colors.white.withOpacity(0.2)),
+                    : Border.all(color: Colors.white.withValues(alpha: 0.2)),
                 boxShadow: [
                   BoxShadow(
                     color: isSelected
-                        ? (theme['accent'] as Color).withOpacity(0.4)
-                        : Colors.black.withOpacity(0.2),
+                        ? (theme['accent'] as Color).withValues(alpha: 0.4)
+                        : Colors.black.withValues(alpha: 0.2),
                     blurRadius: isSelected ? 20 : 10,
                     offset: const Offset(0, 8),
                   ),
@@ -141,9 +141,9 @@ class _ThemesScreenState extends State<ThemesScreen> {
       child: Container(
         height: 35,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
@@ -161,7 +161,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
               child: Container(
                 height: 3,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.4),
+                  color: Colors.white.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -181,9 +181,9 @@ class _ThemesScreenState extends State<ThemesScreen> {
       child: Container(
         height: 60,
         decoration: BoxDecoration(
-          color: (theme['card'] as Color).withOpacity(0.8),
+          color: (theme['card'] as Color).withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -194,7 +194,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
                 width: 60,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.white.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -203,7 +203,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
                 width: 40,
                 height: 6,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.4),
+                  color: Colors.white.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(3),
                 ),
               ),
@@ -222,11 +222,11 @@ class _ThemesScreenState extends State<ThemesScreen> {
       child: Container(
         height: 35,
         decoration: BoxDecoration(
-          color: (theme['button'] as Color).withOpacity(0.9),
+          color: (theme['button'] as Color).withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: (theme['button'] as Color).withOpacity(0.3),
+              color: (theme['button'] as Color).withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),

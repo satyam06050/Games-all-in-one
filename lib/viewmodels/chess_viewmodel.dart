@@ -9,7 +9,7 @@ class ChessViewModel extends GetxController {
   final winner = ''.obs;
   final whiteEmoji = ''.obs;
   final blackEmoji = ''.obs;
-  final emojis = ['😀', '😎', '😡', '🎉', '💪', '😢', '😂', '🔥'].obs;
+  final List<String> emojis = ['😀', '😎', '😡', '🎉', '💪', '😢', '😂', '🔥'];
 
   void setPlayerEmoji(String player, String emoji) {
     if (player == 'white') {

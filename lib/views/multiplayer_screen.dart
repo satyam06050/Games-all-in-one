@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../viewmodels/multiplayer_viewmodel.dart';
-import '../utils/app_res.dart';
+import '../controllers/theme_controller.dart';
 import 'tictactoe_screen.dart';
 import 'chess_screen.dart';
 
@@ -12,14 +12,15 @@ class MultiplayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Get.put(MultiplayerViewModel());
+    final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      backgroundColor: AppRes.backgroundColor,
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.gradientColors[0],
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFFC8019), Color(0xFFFF9F52)],
+              colors: themeController.gradientColors,
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
@@ -37,7 +38,7 @@ class MultiplayerScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [const Color(0xFFFC8019).withValues(alpha: 0.2), Colors.transparent],
+                colors: [themeController.accentColor.withValues(alpha: 0.2), Colors.transparent],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -87,8 +88,8 @@ class MultiplayerScreen extends StatelessWidget {
                       children: [
                         Container(
                           width: 4,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFFC8019),
+                          decoration: BoxDecoration(
+                            color: themeController.accentColor,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(12),
                               bottomLeft: Radius.circular(12),
@@ -100,13 +101,13 @@ class MultiplayerScreen extends StatelessWidget {
                           width: 55,
                           height: 55,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFC8019).withValues(alpha: 0.1),
+                            color: themeController.accentColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Center(
                             child: FaIcon(
                               game.id == 'tictactoe' ? FontAwesomeIcons.xmark : FontAwesomeIcons.chessKnight,
-                              color: const Color(0xFFFC8019),
+                              color: themeController.accentColor,
                               size: 28,
                             ),
                           ),
@@ -136,7 +137,7 @@ class MultiplayerScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const Icon(Icons.arrow_forward_ios, color: Color(0xFFFC8019), size: 20),
+                        Icon(Icons.arrow_forward_ios, color: themeController.accentColor, size: 20),
                         const SizedBox(width: 16),
                       ],
                     ),
@@ -147,6 +148,6 @@ class MultiplayerScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

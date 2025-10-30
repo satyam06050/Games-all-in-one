@@ -36,14 +36,11 @@ class HomeController extends GetxController {
   
   Future<void> fetchGames() async {
     try {
-      print('Fetching games from API...');
       isLoading.value = true;
       error.value = '';
       final fetchedGames = await ApiService.fetchGames();
-      print('Fetched ${fetchedGames.length} games');
       games.value = fetchedGames;
     } catch (e) {
-      print('Error fetching games: $e');
       error.value = e.toString();
     } finally {
       isLoading.value = false;

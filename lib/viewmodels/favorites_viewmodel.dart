@@ -6,6 +6,7 @@ import '../models/game_api_model.dart';
 import '../views/webview_screen.dart';
 import '../views/search_screen.dart';
 import 'home_viewmodel.dart';
+import 'dashboard_viewmodel.dart';
 
 class FavoritesViewModel extends GetxController {
   final favoriteGames = <GameApiModel>[].obs;
@@ -71,6 +72,7 @@ class FavoritesViewModel extends GetxController {
     favoriteGames.remove(game);
     updateQuickAccess();
     saveFavorites();
+    _updateDashboard();
   }
 
   void addToFavorites(GameApiModel game) {
@@ -78,6 +80,14 @@ class FavoritesViewModel extends GetxController {
       favoriteGames.add(game);
       updateQuickAccess();
       saveFavorites();
+      _updateDashboard();
+    }
+  }
+
+  void _updateDashboard() {
+    if (Get.isRegistered<DashboardViewModel>()) {
+      final dashboard = Get.find<DashboardViewModel>();
+      dashboard.updateFavoritesCount(favoriteGames.length);
     }
   }
 

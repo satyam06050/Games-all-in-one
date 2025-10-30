@@ -30,7 +30,7 @@ class RecentGameModel {
 
   String get sessionTime {
     if (sessionMinutes < 60) {
-      return '${sessionMinutes} mins';
+      return '$sessionMinutes mins';
     } else {
       final hours = sessionMinutes ~/ 60;
       final mins = sessionMinutes % 60;

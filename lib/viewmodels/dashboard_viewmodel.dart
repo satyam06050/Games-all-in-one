@@ -21,13 +21,41 @@ class DashboardViewModel extends GetxController {
   Future<void> loadDashboardData() async {
     final prefs = await SharedPreferences.getInstance();
     playerName.value = prefs.getString('playerName') ?? 'Player One';
-    level.value = prefs.getInt('level') ?? 5;
-    coins.value = prefs.getInt('coins') ?? 1200;
-    xp.value = prefs.getInt('xp') ?? 3400;
-    totalPlaytime.value = prefs.getInt('totalPlaytime') ?? 75;
-    dailyStreak.value = prefs.getInt('dailyStreak') ?? 3;
-    gamesPlayed.value = prefs.getInt('gamesPlayed') ?? 12;
-    favorites.value = prefs.getInt('favorites') ?? 5;
+    level.value = prefs.getInt('level') ?? 1;
+    coins.value = prefs.getInt('coins') ?? 0;
+    xp.value = prefs.getInt('xp') ?? 0;
+    totalPlaytime.value = prefs.getInt('totalPlaytime') ?? 0;
+    dailyStreak.value = prefs.getInt('dailyStreak') ?? 0;
+    gamesPlayed.value = prefs.getInt('gamesPlayed') ?? 0;
+    favorites.value = prefs.getInt('favorites') ?? 0;
+    maxXp.value = level.value * 1000;
+  }
+
+  Future<void> saveDashboardData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('playerName', playerName.value);
+    await prefs.setInt('level', level.value);
+    await prefs.setInt('coins', coins.value);
+    await prefs.setInt('xp', xp.value);
+    await prefs.setInt('totalPlaytime', totalPlaytime.value);
+    await prefs.setInt('dailyStreak', dailyStreak.value);
+    await prefs.setInt('gamesPlayed', gamesPlayed.value);
+    await prefs.setInt('favorites', favorites.value);
+  }
+
+  void incrementGamesPlayed() {
+    gamesPlayed.value++;
+    saveDashboardData();
+  }
+
+  void addPlaytime(int minutes) {
+    totalPlaytime.value += minutes;
+    saveDashboardData();
+  }
+
+  void updateFavoritesCount(int count) {
+    favorites.value = count;
+    saveDashboardData();
   }
 
   double get xpProgress => xp.value / maxXp.value;

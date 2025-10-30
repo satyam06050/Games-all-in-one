@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../viewmodels/screenshot_viewmodel.dart';
-import '../utils/app_res.dart';
+import '../controllers/theme_controller.dart';
 import 'screenshot_viewer_screen.dart';
 
 class ScreenshotsScreen extends StatelessWidget {
@@ -11,11 +11,12 @@ class ScreenshotsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Get.put(ScreenshotViewModel());
+    final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      backgroundColor: AppRes.backgroundColor,
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.gradientColors[0],
       appBar: AppBar(
-        backgroundColor: AppRes.primaryColor,
+        backgroundColor: themeController.accentColor,
         title: const Text('Saved Screenshots', style: TextStyle(color: Colors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -65,7 +66,7 @@ class ScreenshotsScreen extends StatelessWidget {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppRes.cardColor,
+                  color: themeController.cardColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -93,7 +94,7 @@ class ScreenshotsScreen extends StatelessWidget {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete, color: AppRes.primaryColor, size: 20),
+                            icon: Icon(Icons.delete, color: themeController.accentColor, size: 20),
                             onPressed: () => _showDeleteDialog(context, viewModel, index),
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
@@ -108,7 +109,7 @@ class ScreenshotsScreen extends StatelessWidget {
           },
         );
       }),
-    );
+    ));
   }
 
   String _formatDate(DateTime date) {
@@ -118,8 +119,10 @@ class ScreenshotsScreen extends StatelessWidget {
   void _showDeleteDialog(BuildContext context, ScreenshotViewModel viewModel, int index) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppRes.cardColor,
+      builder: (context) {
+        final themeController = Get.find<ThemeController>();
+        return AlertDialog(
+        backgroundColor: themeController.cardColor,
         title: const Text('Delete Screenshot', style: TextStyle(color: Colors.white)),
         content: const Text('Are you sure you want to delete this screenshot?', style: TextStyle(color: Colors.white70)),
         actions: [
@@ -132,10 +135,10 @@ class ScreenshotsScreen extends StatelessWidget {
               viewModel.deleteScreenshot(index);
               Navigator.pop(context);
             },
-            child: Text('Delete', style: TextStyle(color: AppRes.primaryColor)),
+            child: Text('Delete', style: TextStyle(color: themeController.accentColor)),
           ),
         ],
-      ),
+      );},
     );
   }
 }
