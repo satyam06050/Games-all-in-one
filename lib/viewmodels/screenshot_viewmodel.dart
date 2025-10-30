@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import '../models/screenshot_model.dart';
 
@@ -71,5 +72,45 @@ class ScreenshotViewModel extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final data = screenshots.map((e) => json.encode(e.toJson())).toList();
     await prefs.setStringList('screenshots', data);
+  }
+
+  Future<void> saveToGallery(BuildContext context, String path) async {
+    try {
+      final status = await Permission.storage.request();
+      if (!status.isGranted) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Storage permission denied')),
+          );
+        }
+        return;
+      }
+
+      final file = File(path);
+      final fileName = 'Games_${DateTime.now().millisecondsSinceEpoch}.png';
+      final directory = Directory('/storage/emulated/0/Pictures/GamesAllInOne');
+      
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+
+      final newFile = File('${directory.path}/$fileName');
+      await file.copy(newFile.path);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Screenshot saved to gallery!'),
+            backgroundColor: Color(0xFFFC8019),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save: $e')),
+        );
+      }
+    }
   }
 }

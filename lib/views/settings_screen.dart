@@ -37,26 +37,6 @@ class SettingsScreen extends StatelessWidget {
                   padding: EdgeInsets.all(AppRes.responsivePadding),
                   children: [
                     _buildSettingsSection(
-                      'General',
-                      [
-                        _buildSettingsTile(
-                          icon: Icons.notifications,
-                          title: 'Notifications',
-                          subtitle: 'Manage your notification preferences',
-                          onTap: () => _showComingSoon('Notification settings'),
-                        ),
-                        _buildSettingsTile(
-                          icon: Icons.language,
-                          title: 'Language',
-                          subtitle: 'English',
-                          onTap: () => _showComingSoon('Language settings'),
-                        ),
-                      ],
-                    ),
-                    
-                    const SizedBox(height: AppRes.paddingL),
-                    
-                    _buildSettingsSection(
                       'Appearance',
                       [
                         _buildSettingsTile(
@@ -153,16 +133,6 @@ class SettingsScreen extends StatelessWidget {
       subtitle: Text(subtitle, style: AppRes.bodySmall.copyWith(color: AppRes.grey)),
       trailing: const Icon(Icons.arrow_forward_ios, color: AppRes.grey, size: 16),
       onTap: onTap,
-    );
-  }
-
-  void _showComingSoon(String feature) {
-    final themeController = Get.find<ThemeController>();
-    ScaffoldMessenger.of(Get.context!).showSnackBar(
-      SnackBar(
-        content: Text('$feature will be available soon!'),
-        backgroundColor: themeController.accentColor,
-      ),
     );
   }
 

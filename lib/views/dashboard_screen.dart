@@ -7,6 +7,7 @@ import 'rating_screen.dart';
 import 'rewards_screen.dart';
 import 'categories_screen.dart';
 import 'recent_games_screen.dart';
+import 'home_view.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -100,8 +101,11 @@ class DashboardScreen extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                  icon: const Icon(Icons.settings, color: Colors.white),
-                  onPressed: () {},
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeView()),
+                  ),
                 ),
               ],
             ),
@@ -581,7 +585,10 @@ class DashboardScreen extends StatelessWidget {
   void _navigateToRoute(BuildContext context, String route) {
     switch (route) {
       case 'home':
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeView()),
+        );
         break;
       case 'rating':
         Navigator.push(

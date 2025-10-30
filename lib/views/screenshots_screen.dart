@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../viewmodels/screenshot_viewmodel.dart';
 import '../controllers/theme_controller.dart';
 import 'screenshot_viewer_screen.dart';
@@ -57,54 +58,60 @@ class ScreenshotsScreen extends StatelessWidget {
           itemCount: viewModel.screenshots.length,
           itemBuilder: (context, index) {
             final screenshot = viewModel.screenshots[index];
-            return GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ScreenshotViewerScreen(screenshot: screenshot),
-                ),
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: themeController.cardColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                        child: Image.file(
-                          File(screenshot.path),
-                          fit: BoxFit.cover,
-                        ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ScreenshotViewerScreen(screenshot: screenshot),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _formatDate(screenshot.timestamp),
-                              style: const TextStyle(fontSize: 12, color: Colors.white),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: themeController.accentColor, size: 20),
-                            onPressed: () => _showDeleteDialog(context, viewModel, index),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                          ),
-                        ],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.file(
+                        File(screenshot.path),
+                        fit: BoxFit.cover,
                       ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _formatDate(screenshot.timestamp),
+                        style: const TextStyle(fontSize: 11, color: Colors.white70),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        InkWell(
+                          onTap: () => viewModel.saveToGallery(context, screenshot.path),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: FaIcon(FontAwesomeIcons.download, color: themeController.accentColor, size: 16),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: () => _showDeleteDialog(context, viewModel, index),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: FaIcon(FontAwesomeIcons.trash, color: themeController.accentColor, size: 16),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ),
+              ],
             );
           },
         );
@@ -135,7 +142,7 @@ class ScreenshotsScreen extends StatelessWidget {
               viewModel.deleteScreenshot(index);
               Navigator.pop(context);
             },
-            child: Text('Delete', style: TextStyle(color: themeController.accentColor)),
+            child: Text('Delete', style: TextStyle(color: themeController.accentColor, fontWeight: FontWeight.bold)),
           ),
         ],
       );},

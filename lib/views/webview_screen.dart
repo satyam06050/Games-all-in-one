@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../viewmodels/webview_viewmodel.dart';
 import '../viewmodels/dashboard_viewmodel.dart';
 import '../models/game_api_model.dart';
@@ -21,11 +22,20 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   DateTime? _startTime;
+  bool _hasInternet = true;
 
   @override
   void initState() {
     super.initState();
     _startTime = DateTime.now();
+    _checkConnectivity();
+  }
+
+  Future<void> _checkConnectivity() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    setState(() {
+      _hasInternet = connectivityResult != ConnectivityResult.none;
+    });
   }
 
   @override
@@ -51,9 +61,65 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+
+    if (!_hasInternet) {
+      return Obx(() => Scaffold(
+        backgroundColor: themeController.gradientColors[0],
+        appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: themeController.gradientColors,
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
+          ),
+          title: Text(widget.game.name, style: const TextStyle(color: Colors.white)),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.wifi_off, size: 80, color: themeController.accentColor),
+              const SizedBox(height: 24),
+              const Text(
+                'No Internet Connection',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Please turn on your internet',
+                style: TextStyle(fontSize: 16, color: Colors.white70),
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  await _checkConnectivity();
+                  if (_hasInternet) {
+                    setState(() {});
+                  }
+                },
+                icon: const Icon(Icons.refresh, color: Colors.white),
+                label: const Text('Reload', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: themeController.accentColor,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ));
+    }
+
     final viewModel = Get.put(WebViewViewModel(widget.game), tag: widget.game.url);
     final screenshotViewModel = Get.put(ScreenshotViewModel());
-    final themeController = Get.find<ThemeController>();
 
     return Obx(() => ScreenshotCaptureWrapper(
       child: Scaffold(

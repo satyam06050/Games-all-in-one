@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/app_res.dart';
 import '../controllers/theme_controller.dart';
 import 'onboarding_screen.dart';
+import 'home_view.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -57,12 +59,16 @@ class _SplashScreenState extends State<SplashScreen>
     _ballController.repeat();
 
     await Future.delayed(const Duration(milliseconds: 2500));
+    
+    final prefs = await SharedPreferences.getInstance();
+    final hasCompletedOnboarding = prefs.getBool('has_completed_onboarding') ?? false;
+    
     if (mounted) {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              OnboardingScreen(),
+              hasCompletedOnboarding ? const HomeView() : OnboardingScreen(),
           transitionDuration: const Duration(milliseconds: 800),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);

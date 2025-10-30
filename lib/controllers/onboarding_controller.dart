@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../views/home_view.dart';
 
 class OnboardingController extends GetxController {
@@ -32,8 +33,11 @@ class OnboardingController extends GetxController {
     );
   }
   
-  void completeOnboarding() {
+  void completeOnboarding() async {
     if (_context != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('has_completed_onboarding', true);
+      
       Navigator.pushReplacement(
         _context!,
         MaterialPageRoute(builder: (context) => const HomeView()),
