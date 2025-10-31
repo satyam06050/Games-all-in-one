@@ -128,54 +128,53 @@ class HomeView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: 70,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: viewModel.quickActions.length,
-            itemBuilder: (context, index) {
-              final action = viewModel.quickActions[index];
-              return Container(
-                width: 70,
-                margin: const EdgeInsets.only(right: 10),
-                decoration: BoxDecoration(
-                  color: themeController.cardColor.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
-                  ),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () =>
-                        viewModel.onQuickActionTap(action['title']!, context),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FaIcon(
-                          action['icon'] as IconData?,
-                          color: themeController.accentColor,
-                          size: 20,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          action['title'] as String,
-                          style: const TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 2.2,
           ),
+          itemCount: viewModel.quickActions.length,
+          itemBuilder: (context, index) {
+            final action = viewModel.quickActions[index];
+            return Container(
+              decoration: BoxDecoration(
+                color: themeController.cardColor.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () =>
+                      viewModel.onQuickActionTap(action['title']!, context),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FaIcon(
+                        action['icon'] as IconData?,
+                        color: themeController.accentColor,
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        action['title'] as String,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ],
     );
@@ -191,7 +190,7 @@ class HomeView extends StatelessWidget {
         Text(
           'Modules',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: themeController.accentColor,
           ),
@@ -201,10 +200,10 @@ class HomeView extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 6,
-            mainAxisSpacing: 6,
-            childAspectRatio: 1.6,
+            crossAxisCount: 3,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            childAspectRatio: 1.3,
           ),
           itemCount: viewModel.modules.length,
           itemBuilder: (context, index) {
@@ -212,35 +211,38 @@ class HomeView extends StatelessWidget {
             return Container(
               decoration: BoxDecoration(
                 color: themeController.cardColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(12),
                   onTap: () => viewModel.onModuleTap(module['title']!, context),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(
-                        module['icon'] as IconData?,
-                        color: themeController.accentColor,
-                        size: 14,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        module['title'] as String,
-                        style: const TextStyle(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(
+                          module['icon'] as IconData?,
+                          color: themeController.accentColor,
+                          size: 24,
                         ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(
+                          module['title'] as String,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
